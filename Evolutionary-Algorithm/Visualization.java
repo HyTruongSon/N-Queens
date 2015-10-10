@@ -1,0 +1,118 @@
+import java.lang.*;
+import java.io.*;
+import java.awt.*;
+import javax.swing.*;
+
+import java.awt.geom.Ellipse2D;
+import java.awt.image.BufferedImage;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
+
+public class Visualization {
+
+	static int Cell_Length = 50;
+	static int Queen_Diameter = 30;
+	
+	static String QueenImage1 = "Queen1.jpg";
+	static String QueenImage2 = "Queen2.jpg";
+	
+	static int Queen1[][] = new int [Queen_Diameter][Queen_Diameter];
+	static int Queen2[][] = new int [Queen_Diameter][Queen_Diameter];
+	
+	public static String GetType(String FileName){
+		int i, j;
+		String res;
+		j = 0;
+		for (i = 0; i < FileName.length(); i++)
+			if (FileName.charAt(i) == '.'){
+				j = i;
+				break;
+			}
+		res = "";
+		for (i = j + 1; i < FileName.length(); i++) res += FileName.charAt(i);
+		return res;
+	}
+	
+	public static void DrawRect(BufferedImage image, int x1, int y1, int x2, int y2, String color){
+		Graphics2D g2d = image.createGraphics();
+			
+		if (color.equals("WHITE"))
+			g2d.setColor(Color.WHITE);
+			
+		if (color.equals("GRAY"))
+			g2d.setColor(Color.GRAY);
+			
+		if (color.equals("BLACK"))
+			g2d.setColor(Color.BLACK);
+		
+		g2d.fillRect(x1, y1, x2 - x1 + 1, y2 - y1 + 1);
+	}
+	
+	public static int RGB(int red,int green,int blue){
+		return (0xff000000) | (red << 16) | (green << 8) | blue;
+	}
+	
+	public static void Draw_Queen(BufferedImage image, int x, int y){
+		int color = ((x % 2) + (y % 2)) % 2;
+		
+		x = x * Cell_Length + Cell_Length / 2 - Queen_Diameter / 2;
+		y = y * Cell_Length + Cell_Length / 2 - Queen_Diameter / 2;
+		
+		int GrayScale;
+		for (int i = 0; i < Queen_Diameter; i++)
+			for (int j = 0; j < Queen_Diameter; j++){
+				if (color == 0) GrayScale = Queen1[i][j]; else
+					GrayScale = 255 - Queen2[i][j];
+				image.setRGB(x + i, y + j, RGB(GrayScale, GrayScale, GrayScale));
+			}
+	}
+	
+	public static void DrawTable(BufferedImage image, int N){
+		for (int i = 0; i < N; i++)
+			for (int j = 0; j < N; j++){
+				int color = ((i % 2) + (j % 2)) % 2;
+				if (color == 0)
+					DrawRect(image, i * Cell_Length, j * Cell_Length, (i + 1) * Cell_Length - 1, (j + 1) * Cell_Length - 1, "WHITE");
+				else
+					DrawRect(image, i * Cell_Length, j * Cell_Length, (i + 1) * Cell_Length - 1, (j + 1) * Cell_Length - 1, "BLACK");
+			}
+	}
+	
+	public static void Get_Queen_Image(String FileName, int Queen[][]) throws IOException{
+		File file = new File(FileName);
+		BufferedImage image = ImageIO.read(file);
+		
+		int width = image.getWidth(null);
+		int height = image.getHeight(null);
+		
+		int GrayScale[][] = new int [width][height];
+		
+		for (int i = 0; i < width; i++)
+			for (int j = 0; j < height; j++){
+				int RGB = image.getRGB(i, j); 
+				int R = (RGB & 0x00ff0000) >> 16;
+				int G = (RGB & 0x0000ff00) >> 8;
+				int B = RGB & 0x000000ff;
+				GrayScale[i][j] = (R * 299 + G * 587 + B * 114) / 1000;
+			}
+			
+		Normalization.Resize(GrayScale, Queen, width, height, Queen_Diameter, Queen_Diameter);
+	}
+	
+	public static void Make_Image(String FileName, int N, int Position_In_Row[]) throws IOException {
+		BufferedImage image = new BufferedImage(Cell_Length * N, Cell_Length * N, BufferedImage.TYPE_INT_RGB);
+		DrawTable(image, N);
+		
+		Get_Queen_Image(QueenImage1, Queen1);
+		Get_Queen_Image(QueenImage2, Queen2);
+		
+		for (int i = 0; i < N; i++)
+			Draw_Queen(image, i, Position_In_Row[i]);
+		
+		File file = new File(FileName);
+		ImageIO.write(image, GetType(FileName), file);
+	}
+	
+}

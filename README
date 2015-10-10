@@ -1,0 +1,55 @@
+Program: N-Queens problem solver (Genetic/Evolutionary Algorithm)
+Name: Hy Truong Son
+NEPTUN code: CM9MM4
+Major: BSc. Computer Science
+Class: 2013 - 2016
+Institution: Eotvos Lorand University
+Email: sonpascal93@gmail.com
+Website: http://people.inf.elte.hu/hytruongson/
+Copyright 2015 (c) Hy Truong Son. All rights reserved.
+
+About
+-----
+N-Queens problem solved by Genetic/Evolutionary Algorithm and simple Back-Tracking Algorithm.
+
+Structure and Usage
+-------------------
+
+*****************************************************
+*** Genetic/Evolutionary Algorithm implementation ***
+*****************************************************
+
+Folder ~/Evolutionary-Algorithm
+Run (output text file Solution and image file Solution.png):
+$ java N_queens
+Size of the chessboard: 12
+
+Generation 1
+Minimum of attacking: 0
+
+Found successfully a solution:
+[0, 11]
+[1, 2]
+[2, 10]
+[3, 1]
+[4, 4]
+[5, 8]
+[6, 3]
+[7, 9]
+[8, 7]
+[9, 5]
+[10, 0]
+[11, 6]
+
+**********************************************
+*** Back-Tracking Algorithm implementation ***
+**********************************************
+
+Folder ~/Back-Tracking/
+Run (output text file Solution and image file Solution.png):
+$ java EightQueens
+Size of the chessboard: 24
+A solution is: 
+[0, 0] [1, 2] [2, 4] [3, 1] [4, 3] [5, 22] [6, 13] [7, 17] [8, 12] [9, 14] [10, 21] [11, 23] [12, 6] [13, 19] [14, 11] [15, 7] [16, 5] [17, 20] [18, 8] [19, 10] [20, 15] [21, 9] [22, 18] [23, 16]
+
+
